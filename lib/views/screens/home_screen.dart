@@ -12,32 +12,43 @@ class HomeScren extends StatefulWidget {
 
 class _HomeScrenState extends State<HomeScren> {
   ApiUrl apiUrl = ApiUrl();
-  Photos photo;
+  Photo photo;
 
   @override
   Widget build(BuildContext context) {
     apiUrl.randomPhoto();
     return ViewModelBuilder<HomeScreenViewModel>.reactive(
+        onModelReady: (model) => model.loadPhoto(),
         builder: (context, model, child) => Scaffold(
               body: Center(
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 34,
-                          spreadRadius: -5),
-                    ],
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(photo?.src?.large),
-                    ),
-                  ),
-                ),
+                child: model.isBusy
+                    ? CircularProgressIndicator()
+                    : Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: 550,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black38,
+                                      blurRadius: 34,
+                                      spreadRadius: -5),
+                                ],
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(model.imageLink),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
             ),
         viewModelBuilder: () => HomeScreenViewModel());

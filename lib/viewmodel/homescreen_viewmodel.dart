@@ -3,21 +3,16 @@ import 'package:sca_mentee/model/photo_model.dart';
 import 'package:sca_mentee/services/web_services.dart';
 import 'package:stacked/stacked.dart';
 
-class HomeScreenViewModel extends ChangeNotifier {
-  PhotoModel _photoModel;
-  PhotoModel get photoModel => _photoModel;
+class HomeScreenViewModel extends BaseViewModel {
+  String _imageLink;
+  String get imageLink => _imageLink;
 
-  set photoModel(PhotoModel val) {
-    _photoModel = val;
-    notifyListeners();
-  }
-
-  Future<void> loadPhoto() async {
+  Future loadPhoto() async {
     try {
-      var photos = await ApiUrl().randomPhoto();
-      _photoModel = photos;
-
+      setBusy(true);
+      _imageLink = await ApiUrl().randomPhoto();
       notifyListeners();
+      setBusy(false);
     } catch (e) {}
   }
 }
